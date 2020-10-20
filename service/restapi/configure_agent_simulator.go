@@ -6,12 +6,15 @@ import (
 	"crypto/tls"
 	"net/http"
 
+	"github.com/empovit/assisted-agent-simulator/service/models"
+	"github.com/empovit/assisted-agent-simulator/service/restapi/operations"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
-
-	"github.com/empovit/assisted-agent-simulator/service/restapi/operations"
+	log "github.com/sirupsen/logrus"
 )
+
+var stepCount = 0
 
 //go:generate swagger generate server --target ../../service --name AgentSimulator --spec ../../swagger.yaml --principal interface{}
 
@@ -39,7 +42,25 @@ func configureAPI(api *operations.AgentSimulatorAPI) http.Handler {
 
 	if api.GetInstructionsHandler == nil {
 		api.GetInstructionsHandler = operations.GetInstructionsHandlerFunc(func(params operations.GetInstructionsParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.GetInstructions has not yet been implemented")
+
+			steps := []models.Step{}
+
+			for i := 0; i < 1; i++ {
+				steps = append(steps, models.Step{
+					Command: "bash",
+					Args:    []string{"-c", "podman run alpine:latest sleep 120"},
+				})
+			}
+
+			steps = append(steps, models.Step{
+				Command: "bash",
+				Args:    []string{"-c", "podman inspect `podman ps --format \"{{.ID}} {{.Names}}\" | grep next-step-runner | awk \"{print $1}\"`; echo \"Finished\""},
+			})
+
+			instructions := steps[stepCount%len(steps)]
+			stepCount++
+			log.Infof("Returning step: %v", instructions)
+			return operations.NewGetInstructionsOK().WithPayload(&instructions)
 		})
 	}
 

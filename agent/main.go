@@ -14,12 +14,7 @@ func main() {
 	var container = flag.String("container", "agent-simulator-command-runner", "Name of command runner container")
 
 	command := "podman"
-	args := []string{
-		"run", "-ti", "--rm",
-		"--privileged", "--pid=host", "--net=host",
-		"-v", "/dev:/dev:rw", "-v", "/opt:/opt:rw",
-		"-v", "/var/log:/var/log:rw",
-		"-v", "/usr/share/zoneinfo:/usr/share/zoneinfo",
+	args := []string{"run", "-ti", "--rm", "--privileged", "--pid=host", "--net=host",
 		"--name", *container, *image, *executable}
 
 	log.Infof("Command: %s, arguments: %q", command, args)

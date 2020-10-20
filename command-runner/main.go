@@ -12,12 +12,12 @@ import (
 
 func main() {
 
-	var url = flag.String("url", "localhost:8080", "Server base URL")
+	var host = flag.String("host", "localhost:8080", "Service host and port")
 
 	for {
 
 		c, err := client.NewHTTPClientWithConfig(nil, &client.TransportConfig{
-			Host:     *url,
+			Host:     *host,
 			BasePath: client.DefaultBasePath,
 			Schemes:  client.DefaultSchemes,
 		}).Operations.GetInstructions(operations.NewGetInstructionsParams())
@@ -29,7 +29,7 @@ func main() {
 
 		instr := *c.GetPayload()
 
-		log.Infof("Command: <%s>, arguments: <%v>", instr.Command, instr.Args)
+		log.Infof("Command: %s, arguments: %q", instr.Command, instr.Args)
 		stdout, stderr, status := util.ExecutePrivileged(instr.Command, instr.Args...)
 		log.Infof("OUT:\n%s\nERR:\n%s\nSTATUS:\n%d", stdout, stderr, status)
 

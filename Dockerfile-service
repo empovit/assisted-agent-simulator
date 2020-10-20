@@ -1,0 +1,5 @@
+FROM alpine:3.12
+
+ENV PORT=8080
+
+ADD build/service /usr/bin/

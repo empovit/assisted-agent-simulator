@@ -6,7 +6,7 @@ import (
 	"crypto/tls"
 	"net/http"
 
-	"github.com/empovit/assisted-agent-simulator/service/models"
+	"github.com/empovit/assisted-agent-simulator/service"
 	"github.com/empovit/assisted-agent-simulator/service/restapi/operations"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -40,29 +40,12 @@ func configureAPI(api *operations.AgentSimulatorAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.GetInstructionsHandler == nil {
-		api.GetInstructionsHandler = operations.GetInstructionsHandlerFunc(func(params operations.GetInstructionsParams) middleware.Responder {
-
-			steps := []models.Step{}
-
-			for i := 0; i < 1; i++ {
-				steps = append(steps, models.Step{
-					Command: "bash",
-					Args:    []string{"-c", "podman run alpine:latest sleep 120"},
-				})
-			}
-
-			steps = append(steps, models.Step{
-				Command: "bash",
-				Args:    []string{"-c", "podman inspect `podman ps --format \"{{.ID}} {{.Names}}\" | grep next-step-runner | awk \"{print $1}\"`; echo \"Finished\""},
-			})
-
-			instructions := steps[stepCount%len(steps)]
-			stepCount++
-			log.Infof("Returning step: %v", instructions)
-			return operations.NewGetInstructionsOK().WithPayload(&instructions)
-		})
-	}
+	api.GetInstructionsHandler = operations.GetInstructionsHandlerFunc(func(params operations.GetInstructionsParams) middleware.Responder {
+		instructions := service.Steps[stepCount%len(service.Steps)]
+		stepCount++
+		log.Infof("Returning instructions: %v", instructions)
+		return operations.NewGetInstructionsOK().WithPayload(&instructions)
+	})
 
 	api.PreServerShutdown = func() {}
 

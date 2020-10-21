@@ -35,6 +35,12 @@ func (o *GetInstructionsReader) ReadResponse(response runtime.ClientResponse, co
 			return nil, err
 		}
 		return nil, result
+	case 501:
+		result := NewGetInstructionsNotImplemented()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
@@ -91,6 +97,27 @@ func (o *GetInstructionsInternalServerError) Error() string {
 }
 
 func (o *GetInstructionsInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewGetInstructionsNotImplemented creates a GetInstructionsNotImplemented with default headers values
+func NewGetInstructionsNotImplemented() *GetInstructionsNotImplemented {
+	return &GetInstructionsNotImplemented{}
+}
+
+/*GetInstructionsNotImplemented handles this case with default header values.
+
+Not implemented
+*/
+type GetInstructionsNotImplemented struct {
+}
+
+func (o *GetInstructionsNotImplemented) Error() string {
+	return fmt.Sprintf("[GET /instructions][%d] getInstructionsNotImplemented ", 501)
+}
+
+func (o *GetInstructionsNotImplemented) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

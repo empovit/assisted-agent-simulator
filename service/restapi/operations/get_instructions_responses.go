@@ -80,3 +80,27 @@ func (o *GetInstructionsInternalServerError) WriteResponse(rw http.ResponseWrite
 
 	rw.WriteHeader(500)
 }
+
+// GetInstructionsNotImplementedCode is the HTTP code returned for type GetInstructionsNotImplemented
+const GetInstructionsNotImplementedCode int = 501
+
+/*GetInstructionsNotImplemented Not implemented
+
+swagger:response getInstructionsNotImplemented
+*/
+type GetInstructionsNotImplemented struct {
+}
+
+// NewGetInstructionsNotImplemented creates GetInstructionsNotImplemented with default headers values
+func NewGetInstructionsNotImplemented() *GetInstructionsNotImplemented {
+
+	return &GetInstructionsNotImplemented{}
+}
+
+// WriteResponse to the client
+func (o *GetInstructionsNotImplemented) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(501)
+}

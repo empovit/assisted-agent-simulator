@@ -21,9 +21,11 @@ paths:
         200:
           description: Success.
           schema:
-            $ref: '#/definitions/step'
+            $ref: '#/definitions/step'            
         500:
           description: Unexpected error
+        501:
+          description: Not implemented
 
 definitions:
   step:

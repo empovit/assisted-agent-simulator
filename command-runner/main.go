@@ -13,8 +13,11 @@ import (
 func main() {
 
 	var host = flag.String("host", "localhost:8080", "Service host and port")
+	log.Infof("Connecting to %s", *host)
 
 	for {
+
+		time.Sleep(time.Duration(10 * time.Second))
 
 		c, err := client.NewHTTPClientWithConfig(nil, &client.TransportConfig{
 			Host:     *host,
@@ -32,7 +35,5 @@ func main() {
 		log.Infof("Command: %s, arguments: %q", instr.Command, instr.Args)
 		stdout, stderr, status := util.ExecutePrivileged(instr.Command, instr.Args...)
 		log.Infof("OUT:\n%s\nERR:\n%s\nSTATUS:\n%d", stdout, stderr, status)
-
-		time.Sleep(time.Duration(10 * time.Second))
 	}
 }

@@ -48,6 +48,9 @@ func init() {
           },
           "500": {
             "description": "Unexpected error"
+          },
+          "501": {
+            "description": "Not implemented"
           }
         }
       }
@@ -101,6 +104,9 @@ func init() {
           },
           "500": {
             "description": "Unexpected error"
+          },
+          "501": {
+            "description": "Not implemented"
           }
         }
       }

@@ -10,6 +10,6 @@ var Steps = []models.Step{
 	},
 	models.Step{
 		Command: "bash",
-		Args:    []string{"-c", "podman stop `podman ps --format \"{{.ID}} {{.Names}}\" | grep -v agent-simulator | awk \"{print $1}\"`; echo \"Finished\""},
+		Args:    []string{"-c", "podman stop `podman ps --format \"{{.ID}} {{.Names}}\" | grep -v agent-simulator | awk '{print $1}'`; echo \"Finished\""},
 	},
 }

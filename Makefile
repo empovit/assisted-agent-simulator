@@ -23,12 +23,12 @@ build-agent:
 
 build-service:
 	CGO_ENABLED=0 go build -o build/step-service service/cmd/agent-simulator-server/main.go
-	PORT=${SERVICE_PORT} podman build -t ${SERVICE_IMAGE} . -f Dockerfile-service
+	podman build -t ${SERVICE_IMAGE} . -f Dockerfile-service
 
 run: stop
-	podman run -d --name ${SERVICE_CONTAINER} -p ${SERVICE_PORT} ${SERVICE_IMAGE} step-service
+	podman run --net=host -d --name ${SERVICE_CONTAINER} ${SERVICE_IMAGE} step-service --port ${SERVICE_PORT}
 	sudo build/agent --command ${COMMAND_RUNNER_COMMAND} --image ${COMMAND_RUNNER_IMAGE} --container ${COMMAND_RUNNER_CONTAINER} --host localhost:${SERVICE_PORT}
 
 stop:
-	podman rm -f -i ${SERVICE_CONTAINER}
-	sudo podman rm -f -i ${COMMAND_RUNNER_CONTAINER}
+	podman rm -f ${SERVICE_CONTAINER} || true
+	sudo podman rm -f ${COMMAND_RUNNER_CONTAINER} || true

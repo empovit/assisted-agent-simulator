@@ -22,10 +22,8 @@ build-agent:
 	CGO_ENABLED=0 go build -o build/agent agent/main.go
 
 build-service:
-	# PORT=${SERVICE_PORT} podman build -v "${PWD}":/src -t ${SERVICE_IMAGE} . -f Dockerfile-service
 	CGO_ENABLED=0 go build -o build/step-service service/cmd/agent-simulator-server/main.go
 	PORT=${SERVICE_PORT} podman build -t ${SERVICE_IMAGE} . -f Dockerfile-service
-
 
 run: stop
 	podman run -d --name ${SERVICE_CONTAINER} -p ${SERVICE_PORT} ${SERVICE_IMAGE} step-service

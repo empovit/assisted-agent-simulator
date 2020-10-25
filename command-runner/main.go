@@ -12,6 +12,10 @@ import (
 
 func main() {
 
+	if _, _, exitCode := util.ExecutePrivileged("docker", "--version"); exitCode == 0 {
+		log.Fatal("Docker detected. Please run this on a machine without Docker installed")
+	}
+
 	var host = flag.String("host", "localhost:8080", "Service host and port")
 	log.Infof("Connecting to %s", *host)
 

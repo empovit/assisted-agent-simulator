@@ -33,3 +33,7 @@ stop:
 	# older porman versions don't support --ignore, so redirect errors to /dev/null
 	podman rm -f ${SERVER_CONTAINER} 2>/dev/null || true
 	sudo podman rm -f ${COMMAND_RUNNER_CONTAINER} 2>/dev/null || true
+
+edit:
+	vi commands.json
+	podman restart ${SERVER_CONTAINER}

@@ -1,19 +1,5 @@
 [
     {
-        "command": "bash",
-        "args": [
-            "-c",
-            "podman run --rm alpine:latest sleep 120"
-        ]
-    },
-    {
-        "command": "podman",
-        "args": [
-            "ps",
-            "-a"
-        ]
-    },
-    {
         "command": "echo",
         "args": [
             "Hello",
@@ -21,10 +7,15 @@
         ]
     },
     {
-        "command": "bash",
+        "command": "podman",
         "args": [
-            "-c",
-            "podman stop `podman ps --format \"{{.ID}} {{.Names}}\" | grep -v agent-simulator | awk '{print $1}'`; echo \"Finished\""
+            "ps"
+        ]
+    },
+    {
+        "command": "echo",
+        "args": [
+            "Goodbye!"
         ]
     }
 ]

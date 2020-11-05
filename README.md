@@ -1,10 +1,11 @@
 This project simulates the flow of an assisted installer agent and allows
 easy troubleshooting of commands:
 
-1. `agent` is an executable that runs with `sudo` on the host and starts the `command-runner`.
-2. `command-runner` is a binary packaged as a container that periodically polls the `command-server` 
-   for a command and executes it.
-3. `command-server` is an HTTP server that runs in a container and loops through an array of commands when requested.
+1. `agent` is an executable that starts a `command-runner`. It must run with `sudo` on the host.
+2. `command-runner` is an executable packaged as a container that periodically polls a `command-server` 
+   and executes the command received from it via `nsenter`. The command can be another Podman command.
+3. `command-server` is an HTTP server that loads commands from a JSON file passed via `--commands-file`, 
+   and loops through them returning one command at a time.
 
 # Build
 
@@ -12,18 +13,24 @@ easy troubleshooting of commands:
 
 # Run
 
-Update _commands.json_ with the commands you want to run. You can also change them later and the system will pick up the changes.
+1. Update _commands.json_ with the commands you want to run. 
+2. Start the three components with `make run`.
 
-`make run`
+Keep in mind that the agent runs in the foreground, so you will have to open another terminal 
+window to interact with the `command-runner` and `command-server`.
 
-The agent runs in the foreground, open another terminal window to inspect the running containers and their logs.
+When using `make run`, the server will run as a container.
 
-View the execution log `sudo podman logs agent-simulator-command-runner`.
+You can edit _commands.json_ and make the system pick up the changes:
+- If you run the `command-server` manually as an executable on the host (not as a container).
+- Using `make edit` target. In this case the server container will be restarted as soon as you exit the editor.
+
+View the command execution log using `sudo podman logs agent-simulator-command-runner`.
 
 # Stop
 
-1. `Ctrl+C` to stop the agent process.
-2. `make stop` to stop and remove the containers.
+Run `make stop` to stop and remove the containers.
+The `agent` will exit automatically as soon as the `command-runner` terminates.
 
 Keep in mind that commands that were sent to the agent and are still running will not be terminated.
 

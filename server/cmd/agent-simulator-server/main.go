@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/empovit/assisted-agent-simulator/service/restapi"
-	"github.com/empovit/assisted-agent-simulator/service/restapi/operations"
+	"github.com/empovit/assisted-agent-simulator/server/restapi"
+	"github.com/empovit/assisted-agent-simulator/server/restapi/operations"
 	"github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
 )

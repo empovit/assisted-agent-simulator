@@ -6,20 +6,29 @@ import (
 	"crypto/tls"
 	"net/http"
 
-	"github.com/empovit/assisted-agent-simulator/service"
-	"github.com/empovit/assisted-agent-simulator/service/restapi/operations"
+	"github.com/empovit/assisted-agent-simulator/server"
+	"github.com/empovit/assisted-agent-simulator/server/restapi/operations"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/swag"
 	log "github.com/sirupsen/logrus"
 )
 
-var stepCount = 0
+var config = struct {
+	CommandsFile string `long:"commands-file" description:"Path to a file that contains commands"`
+}{}
 
-//go:generate swagger generate server --target ../../service --name AgentSimulator --spec ../../swagger.yaml --principal interface{}
+//go:generate swagger generate server --target ../../server --name AgentSimulator --spec ../../swagger.yaml --principal interface{}
 
 func configureFlags(api *operations.AgentSimulatorAPI) {
-	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
+	api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{
+		swag.CommandLineOptionsGroup{
+			ShortDescription: "Commands server configuration",
+			LongDescription:  "",
+			Options:          &config,
+		},
+	}
 }
 
 func configureAPI(api *operations.AgentSimulatorAPI) http.Handler {
@@ -40,11 +49,13 @@ func configureAPI(api *operations.AgentSimulatorAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	api.GetInstructionsHandler = operations.GetInstructionsHandlerFunc(func(params operations.GetInstructionsParams) middleware.Responder {
-		instructions := service.Steps[stepCount%len(service.Steps)]
-		stepCount++
-		log.Infof("Returning instructions: %v", instructions)
-		return operations.NewGetInstructionsOK().WithPayload(&instructions)
+	log.Infof("Will serve commands from %q", config.CommandsFile)
+	commands := server.NewCommandReader(config.CommandsFile)
+
+	api.GetCommandsHandler = operations.GetCommandsHandlerFunc(func(params operations.GetCommandsParams) middleware.Responder {
+		cmd := commands.NextCommand()
+		log.Infof("Returning command: %v", cmd)
+		return operations.NewGetCommandsOK().WithPayload(cmd)
 	})
 
 	api.PreServerShutdown = func() {}

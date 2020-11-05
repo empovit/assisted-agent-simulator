@@ -27,42 +27,42 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	GetInstructions(params *GetInstructionsParams) (*GetInstructionsOK, error)
+	GetCommands(params *GetCommandsParams) (*GetCommandsOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
 
 /*
-  GetInstructions returns a command to be run by the agent
+  GetCommands returns a command to be run by the agent
 */
-func (a *Client) GetInstructions(params *GetInstructionsParams) (*GetInstructionsOK, error) {
+func (a *Client) GetCommands(params *GetCommandsParams) (*GetCommandsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewGetInstructionsParams()
+		params = NewGetCommandsParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "GetInstructions",
+		ID:                 "GetCommands",
 		Method:             "GET",
-		PathPattern:        "/instructions",
+		PathPattern:        "/commands",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
 		Params:             params,
-		Reader:             &GetInstructionsReader{formats: a.formats},
+		Reader:             &GetCommandsReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*GetInstructionsOK)
+	success, ok := result.(*GetCommandsOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for GetInstructions: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for GetCommands: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

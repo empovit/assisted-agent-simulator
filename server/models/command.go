@@ -10,10 +10,10 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Step step
+// Command command
 //
-// swagger:model step
-type Step struct {
+// swagger:model command
+type Command struct {
 
 	// args
 	Args []string `json:"args"`
@@ -22,13 +22,13 @@ type Step struct {
 	Command string `json:"command,omitempty"`
 }
 
-// Validate validates this step
-func (m *Step) Validate(formats strfmt.Registry) error {
+// Validate validates this command
+func (m *Command) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *Step) MarshalBinary() ([]byte, error) {
+func (m *Command) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -36,8 +36,8 @@ func (m *Step) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Step) UnmarshalBinary(b []byte) error {
-	var res Step
+func (m *Command) UnmarshalBinary(b []byte) error {
+	var res Command
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

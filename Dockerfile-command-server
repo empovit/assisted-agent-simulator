@@ -1,0 +1,3 @@
+FROM docker.io/alpine:3.12
+
+ADD build/command-server /usr/bin/

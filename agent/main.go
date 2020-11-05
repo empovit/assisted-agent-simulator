@@ -12,11 +12,14 @@ func main() {
 	var executable = flag.String("command", "command-runner", "Command runner executable")
 	var image = flag.String("image", "agent-simulator/command-runner:1.0", "Command runner image")
 	var container = flag.String("container", "agent-simulator-command-runner", "Name of command runner container")
-	var serviceHost = flag.String("host", "localhost:8080", "Service host and port")
+	var serverHost = flag.String("host", "localhost:8080", "Server host and port")
+	var pollingInterval = flag.String("interval", "10s", "Polling interval")
+
+	flag.Parse()
 
 	command := "podman"
 	args := []string{"run", "-ti", "--rm", "--privileged", "--pid=host", "--net=host",
-		"--name", *container, *image, *executable, "--host", *serviceHost}
+		"--name", *container, *image, *executable, "--host", *serverHost, "--interval", *pollingInterval}
 
 	log.Infof("Command: %s, arguments: %q", command, args)
 	stdout, stderr, status := util.Execute(command, args...)

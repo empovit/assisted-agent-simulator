@@ -1,3 +1,0 @@
-FROM docker.io/alpine:3.12
-
-ADD build/step-service /usr/bin/

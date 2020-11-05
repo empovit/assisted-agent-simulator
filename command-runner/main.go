@@ -4,8 +4,8 @@ import (
 	"flag"
 	"time"
 
-	"github.com/empovit/assisted-agent-simulator/service/client"
-	"github.com/empovit/assisted-agent-simulator/service/client/operations"
+	"github.com/empovit/assisted-agent-simulator/server/client"
+	"github.com/empovit/assisted-agent-simulator/server/client/operations"
 	"github.com/empovit/assisted-agent-simulator/util"
 	log "github.com/sirupsen/logrus"
 )
@@ -16,8 +16,12 @@ func main() {
 		log.Fatal("Docker detected. Please run this on a machine without Docker installed")
 	}
 
-	var host = flag.String("host", "localhost:8080", "Service host and port")
+	var host = flag.String("host", "localhost:8080", "Server host and port")
+	var interval = flag.Duration("interval", 10*time.Second, "Next command polling interval")
+	flag.Parse()
+
 	log.Infof("Connecting to %s", *host)
+	log.Infof("Polling for a command every %s", *interval)
 
 	for {
 
@@ -27,20 +31,20 @@ func main() {
 				Host:     *host,
 				BasePath: client.DefaultBasePath,
 				Schemes:  client.DefaultSchemes,
-			}).Operations.GetInstructions(operations.NewGetInstructionsParams())
+			}).Operations.GetCommands(operations.NewGetCommandsParams())
 
 			if err != nil {
 				log.Errorf("Error: %s", err)
 				return
 			}
 
-			instr := *c.GetPayload()
+			cmd := *c.GetPayload()
 
-			log.Infof("Command: %s, arguments: %q", instr.Command, instr.Args)
-			stdout, stderr, status := util.ExecutePrivileged(instr.Command, instr.Args...)
+			log.Infof("Command: %s, arguments: %q", cmd.Command, cmd.Args)
+			stdout, stderr, status := util.ExecutePrivileged(cmd.Command, cmd.Args...)
 			log.Infof("OUT:\n%s\nERR:\n%s\nSTATUS:\n%d", stdout, stderr, status)
 		}()
 
-		time.Sleep(time.Duration(10 * time.Second))
+		time.Sleep(*interval)
 	}
 }

@@ -42,8 +42,8 @@ func NewAgentSimulatorAPI(spec *loads.Document) *AgentSimulatorAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		GetInstructionsHandler: GetInstructionsHandlerFunc(func(params GetInstructionsParams) middleware.Responder {
-			return middleware.NotImplemented("operation GetInstructions has not yet been implemented")
+		GetCommandsHandler: GetCommandsHandlerFunc(func(params GetCommandsParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetCommands has not yet been implemented")
 		}),
 	}
 }
@@ -79,8 +79,8 @@ type AgentSimulatorAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
-	// GetInstructionsHandler sets the operation handler for the get instructions operation
-	GetInstructionsHandler GetInstructionsHandler
+	// GetCommandsHandler sets the operation handler for the get commands operation
+	GetCommandsHandler GetCommandsHandler
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
 	ServeError func(http.ResponseWriter, *http.Request, error)
@@ -157,8 +157,8 @@ func (o *AgentSimulatorAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.GetInstructionsHandler == nil {
-		unregistered = append(unregistered, "GetInstructionsHandler")
+	if o.GetCommandsHandler == nil {
+		unregistered = append(unregistered, "GetCommandsHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -251,7 +251,7 @@ func (o *AgentSimulatorAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/instructions"] = NewGetInstructions(o.context, o.GetInstructionsHandler)
+	o.handlers["GET"]["/commands"] = NewGetCommands(o.context, o.GetCommandsHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

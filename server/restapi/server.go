@@ -25,7 +25,7 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"golang.org/x/net/netutil"
 
-	"github.com/empovit/assisted-agent-simulator/service/restapi/operations"
+	"github.com/empovit/assisted-agent-simulator/server/restapi/operations"
 )
 
 const (

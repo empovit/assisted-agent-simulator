@@ -36,15 +36,18 @@ func init() {
   "host": "localhost",
   "basePath": "/",
   "paths": {
-    "/instructions": {
+    "/commands": {
       "get": {
         "summary": "Returns a command to be run by the agent",
         "responses": {
           "200": {
             "description": "Success.",
             "schema": {
-              "$ref": "#/definitions/step"
+              "$ref": "#/definitions/command"
             }
+          },
+          "404": {
+            "description": "Not found"
           },
           "500": {
             "description": "Unexpected error"
@@ -57,7 +60,7 @@ func init() {
     }
   },
   "definitions": {
-    "step": {
+    "command": {
       "type": "object",
       "properties": {
         "args": {
@@ -92,15 +95,18 @@ func init() {
   "host": "localhost",
   "basePath": "/",
   "paths": {
-    "/instructions": {
+    "/commands": {
       "get": {
         "summary": "Returns a command to be run by the agent",
         "responses": {
           "200": {
             "description": "Success.",
             "schema": {
-              "$ref": "#/definitions/step"
+              "$ref": "#/definitions/command"
             }
+          },
+          "404": {
+            "description": "Not found"
           },
           "500": {
             "description": "Unexpected error"
@@ -113,7 +119,7 @@ func init() {
     }
   },
   "definitions": {
-    "step": {
+    "command": {
       "type": "object",
       "properties": {
         "args": {

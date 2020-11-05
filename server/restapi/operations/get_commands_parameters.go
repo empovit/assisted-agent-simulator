@@ -12,18 +12,18 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-// NewGetInstructionsParams creates a new GetInstructionsParams object
+// NewGetCommandsParams creates a new GetCommandsParams object
 // no default values defined in spec.
-func NewGetInstructionsParams() GetInstructionsParams {
+func NewGetCommandsParams() GetCommandsParams {
 
-	return GetInstructionsParams{}
+	return GetCommandsParams{}
 }
 
-// GetInstructionsParams contains all the bound params for the get instructions operation
+// GetCommandsParams contains all the bound params for the get commands operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters GetInstructions
-type GetInstructionsParams struct {
+// swagger:parameters GetCommands
+type GetCommandsParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -32,8 +32,8 @@ type GetInstructionsParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewGetInstructionsParams() beforehand.
-func (o *GetInstructionsParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetCommandsParams() beforehand.
+func (o *GetCommandsParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r

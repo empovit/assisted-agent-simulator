@@ -14,7 +14,9 @@ easy troubleshooting of commands:
 # Run
 
 1. Update _commands.json_ with the commands you want to run. 
-2. Start the three components with `make run`.
+2. Start all the three components with `make run`, 
+   or `POLLING_INTERVAL=7s make run` to change the command polling interval 
+   (in Go [duration](https://golang.org/pkg/time/#ParseDuration) format).
 
 Keep in mind that the agent runs in the foreground, so you will have to open another terminal 
 window to interact with the `command-runner` and `command-server`.

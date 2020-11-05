@@ -6,6 +6,8 @@ COMMAND_RUNNER_CONTAINER=agent-simulator-command-runner
 COMMAND_RUNNER_IMAGE=agent-simulator/command-runner:1.0
 COMMAND_RUNNER_COMMAND=command-runner
 
+POLLING_INTERVAL ?= 10s
+
 build: build-runner build-agent build-server
 
 generate-swagger:
@@ -27,7 +29,7 @@ build-server:
 
 run: stop
 	podman run --net=host -d -v $(PWD)/commands.json:/commands.json --name ${SERVER_CONTAINER} ${SERVER_IMAGE} command-server --port ${SERVER_PORT} --commands-file /commands.json
-	sudo build/agent --command ${COMMAND_RUNNER_COMMAND} --image ${COMMAND_RUNNER_IMAGE} --container ${COMMAND_RUNNER_CONTAINER} --host localhost:${SERVER_PORT}
+	sudo build/agent --command ${COMMAND_RUNNER_COMMAND} --image ${COMMAND_RUNNER_IMAGE} --container ${COMMAND_RUNNER_CONTAINER} --host localhost:${SERVER_PORT} --interval ${POLLING_INTERVAL}
 
 stop:
 	# older porman versions don't support --ignore, so redirect errors to /dev/null

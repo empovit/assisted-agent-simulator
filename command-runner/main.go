@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"strings"
 	"time"
 
 	"github.com/empovit/assisted-agent-simulator/server/client"
@@ -19,6 +20,10 @@ func main() {
 	var host = flag.String("host", "localhost:8080", "Server host and port")
 	var interval = flag.Duration("interval", 10*time.Second, "Next command polling interval")
 	flag.Parse()
+
+	if *interval < 0 {
+		log.Fatal("polling interval must be positive")
+	}
 
 	log.Infof("Connecting to %s", *host)
 	log.Infof("Polling for a command every %s", *interval)
@@ -40,9 +45,10 @@ func main() {
 
 			cmd := *c.GetPayload()
 
-			log.Infof("Command: %s, arguments: %q", cmd.Command, cmd.Args)
+			log.Infof("Starting command: %s, arguments: %q", cmd.Command, cmd.Args)
 			stdout, stderr, status := util.ExecutePrivileged(cmd.Command, cmd.Args...)
-			log.Infof("OUT:\n%s\nERR:\n%s\nSTATUS:\n%d", stdout, stderr, status)
+			full := cmd.Command + " " + strings.Join(cmd.Args, " ")
+			log.Infof("command:\n<%s>\noutput:\n<%s>\nerror:\n<%s>\nstatus:\n<%d>", full, stdout, stderr, status)
 		}()
 
 		time.Sleep(*interval)

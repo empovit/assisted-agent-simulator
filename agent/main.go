@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"strings"
 
 	"github.com/empovit/assisted-agent-simulator/util"
 	log "github.com/sirupsen/logrus"
@@ -21,7 +22,7 @@ func main() {
 	args := []string{"run", "-ti", "--rm", "--privileged", "--pid=host", "--net=host",
 		"--name", *container, *image, *executable, "--host", *serverHost, "--interval", *pollingInterval}
 
-	log.Infof("Command: %s, arguments: %q", command, args)
+	log.Infof("Command runner: " + command + " " + strings.Join(args, " "))
 	stdout, stderr, status := util.Execute(command, args...)
-	log.Infof("OUT:\n%s\nERR:\n%s\nSTATUS:\n%d", stdout, stderr, status)
+	log.Infof("output:\n<%s>\nerror:\n<%s>\nstatus:\n<%d>", stdout, stderr, status)
 }
